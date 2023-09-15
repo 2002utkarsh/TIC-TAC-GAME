@@ -3,175 +3,136 @@ import java.util.Scanner;
 
 public class TicTacToe {
 
-	public static void main(String[] args) {
-		
-		Scanner scanner = new Scanner(System.in);
-		
-		char[][] board = {{' ', ' ', ' '},
-				 	      {' ', ' ', ' '}, 
-				 	      {' ', ' ', ' '}};
-		
-		printBoard(board);
-		
-		while (true) {
-			playerTurn(board, scanner);
-			if (isGameFinished(board)){
-				break;
-			}
-			printBoard(board);
-			
-			computerTurn(board);
-			if (isGameFinished(board)){
-				break;
-			}
-			printBoard(board);
-		}
-		scanner.close();
-	}
+    private static final int BOARD_SIZE = 3;
+    private static final char PLAYER_SYMBOL = 'X';
+    private static final char COMPUTER_SYMBOL = 'O';
+    private static final char EMPTY_CELL = ' ';
 
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        char[][] board = createBoard();
 
-	private static boolean isGameFinished(char[][] board) {
-		
-		if (hasContestantWon(board, 'X')) {	
-			printBoard(board);
-			System.out.println("Player wins!");
-			return true;
-		}
-		
-		if (hasContestantWon(board, 'O')) {	
-			printBoard(board);
-			System.out.println("Computer wins!");
-			return true;
-		}
-		
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				if (board[i][j] == ' ') {
-					return false;
-				}
-			}
-		}
-		printBoard(board);
-		System.out.println("The game ended in a tie!");
-		return true;
-	}
+        printBoard(board);
 
+        while (true) {
+            playerTurn(board, scanner);
+            if (isGameFinished(board)) {
+                break;
+            }
 
-	private static boolean hasContestantWon(char[][] board, char symbol) {
-		if ((board[0][0] == symbol && board [0][1] == symbol && board [0][2] == symbol) ||
-			(board[1][0] == symbol && board [1][1] == symbol && board [1][2] == symbol) ||
-			(board[2][0] == symbol && board [2][1] == symbol && board [2][2] == symbol) ||
-			
-			(board[0][0] == symbol && board [1][0] == symbol && board [2][0] == symbol) ||
-			(board[0][1] == symbol && board [1][1] == symbol && board [2][1] == symbol) ||
-			(board[0][2] == symbol && board [1][2] == symbol && board [2][2] == symbol) ||
-			
-			(board[0][0] == symbol && board [1][1] == symbol && board [2][2] == symbol) ||
-			(board[0][2] == symbol && board [1][1] == symbol && board [2][0] == symbol) ) {
-			return true;
-		}
-		return false;
-	}
+            printBoard(board);
 
+            computerTurn(board);
+            if (isGameFinished(board)) {
+                break;
+            }
 
-	private static void computerTurn(char[][] board) {
-		Random rand = new Random();
-		int computerMove;
-		while (true) {
-			computerMove = rand.nextInt(9) + 1;
-			if (isValidMove(board, Integer.toString(computerMove))) {
-				break;
-			}
-		}
-		System.out.println("Computer chose " + computerMove);
-		placeMove(board, Integer.toString(computerMove), 'O');
-	}
+            printBoard(board);
+        }
 
+        scanner.close();
+    }
 
-	private static boolean isValidMove (char[][] board, String position) {
-		switch(position) {
-			case "1":
-				return (board[0][0] == ' ');
-			case "2":
-				return (board[0][1] == ' ');
-			case "3":
-				return (board[0][2] == ' ');
-			case "4":
-				return (board[1][0] == ' ');
-			case "5":
-				return (board[1][1] == ' ');
-			case "6":
-				return (board[1][2] == ' ');
-			case "7":
-				return (board[2][0] == ' ');
-			case "8":
-				return (board[2][1] == ' ');
-			case "9":
-				return (board[2][2] == ' ');
-			default:
-				return false;
-		}
-	}
+    private static char[][] createBoard() {
+        char[][] board = new char[BOARD_SIZE][BOARD_SIZE];
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                board[i][j] = EMPTY_CELL;
+            }
+        }
+        return board;
+    }
 
-	private static void playerTurn(char[][] board, Scanner scanner) {
-		String userInput;
-		while (true) {
-			System.out.println("Where would you like to play? (1-9)");
-			userInput = scanner.nextLine();
-			if (isValidMove(board, userInput)){
-				break;
-			} else {
-				System.out.println(userInput + " is not a valid move.");
-			}
-		}
-		placeMove(board, userInput, 'X');
-	}
+    private static void printBoard(char[][] board) {
+        System.out.println("-------------");
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            System.out.print("| ");
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                System.out.print(board[i][j] + " | ");
+            }
+            System.out.println("\n-------------");
+        }
+    }
 
+    private static boolean isGameFinished(char[][] board) {
+        if (hasContestantWon(board, PLAYER_SYMBOL)) {
+            printBoard(board);
+            System.out.println("Player wins!");
+            return true;
+        }
 
-	private static void placeMove(char[][] board, String position, char symbol) {
-		switch(position) {
-			case "1":
-				board[0][0] = symbol;
-				break;
-			case "2":
-				board[0][1] = symbol;
-				break;
-			case "3":
-				board[0][2] = symbol;
-				break;
-			case "4":
-				board[1][0] = symbol;
-				break;
-			case "5":
-				board[1][1] = symbol;
-				break;
-			case "6":
-				board[1][2] = symbol;
-				break;
-			case "7":
-				board[2][0] = symbol;
-				break;
-			case "8":
-				board[2][1] = symbol;
-				break;
-			case "9":
-				board[2][2] = symbol;
-				break;
-			default:
-				System.out.println(":(");
-		}
-	}
+        if (hasContestantWon(board, COMPUTER_SYMBOL)) {
+            printBoard(board);
+            System.out.println("Computer wins!");
+            return true;
+        }
 
-	
-	
-	
-	private static void printBoard(char[][] board) {
-		System.out.println(board[0][0] + "|" +  board[0][1] + "|" +  board[0][2] );
-		System.out.println("-+-+-");
-		System.out.println(board[1][0] + "|" +  board[1][1] + "|" +  board[1][2] );
-		System.out.println("-+-+-");
-		System.out.println(board[2][0] + "|" +  board[2][1] + "|" +  board[2][2] );
-	}
-	
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (board[i][j] == EMPTY_CELL) {
+                    return false;
+                }
+            }
+        }
+
+        printBoard(board);
+        System.out.println("The game ended in a tie!");
+        return true;
+    }
+
+    private static boolean hasContestantWon(char[][] board, char symbol) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            if (board[i][0] == symbol && board[i][1] == symbol && board[i][2] == symbol) {
+                return true; // Rows
+            }
+            if (board[0][i] == symbol && board[1][i] == symbol && board[2][i] == symbol) {
+                return true; // Columns
+            }
+        }
+        if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
+            return true; // Diagonal from top-left to bottom-right
+        }
+        if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
+            return true; // Diagonal from top-right to bottom-left
+        }
+        return false;
+    }
+
+    private static void computerTurn(char[][] board) {
+        Random rand = new Random();
+        int computerMove;
+        while (true) {
+            computerMove = rand.nextInt(9) + 1;
+            int row = (computerMove - 1) / BOARD_SIZE;
+            int col = (computerMove - 1) % BOARD_SIZE;
+            if (isValidMove(board, row, col)) {
+                board[row][col] = COMPUTER_SYMBOL;
+                System.out.println("Computer chose " + computerMove);
+                break;
+            }
+        }
+    }
+
+    private static boolean isValidMove(char[][] board, int row, int col) {
+        if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE && board[row][col] == EMPTY_CELL) {
+            return true;
+        }
+        return false;
+    }
+
+    private static void playerTurn(char[][] board, Scanner scanner) {
+        int playerMove;
+        while (true) {
+            System.out.println("Where would you like to play? (1-9)");
+            playerMove = scanner.nextInt();
+            int row = (playerMove - 1) / BOARD_SIZE;
+            int col = (playerMove - 1) % BOARD_SIZE;
+            if (isValidMove(board, row, col)) {
+                board[row][col] = PLAYER_SYMBOL;
+                break;
+            } else {
+                System.out.println(playerMove + " is not a valid move.");
+            }
+        }
+    }
 }
-  
